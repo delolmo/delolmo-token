@@ -1,0 +1,19 @@
+{
+    "name": "delolmo/delolmo-token",
+    "description": "Provides a set of classes and interfaces to manage tokens (CSRF, account activation, password reset, etc.)",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Antonio del Olmo García",
+            "email": "adelolmog@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DelOlmo\\": "src/"
+        }
+    }
+}
