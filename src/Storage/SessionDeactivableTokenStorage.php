@@ -49,18 +49,16 @@ class SessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
             $this->startSession();
         }
 
-        $store = $_SESSION[$this->namespace];
-
-        if (!isset($store[$tokenId]) ||
-                !$store[$tokenId]['expiresAt'] instanceof \DateTime ||
-                $store[$tokenId]['expiresAt'] < new \DateTime() ||
-                (bool) $store[$tokenId]['active'] === false) {
+        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
+                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime() ||
+                (bool) $_SESSION[$this->namespace][$tokenId]['active'] === false) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
         }
 
-        return (string) $store[$tokenId]['value'];
+        return (string) $_SESSION[$this->namespace][$tokenId]['value'];
     }
 
     /**
@@ -88,17 +86,15 @@ class SessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
             $this->startSession();
         }
 
-        $store = $_SESSION[$this->namespace];
-
-        if (!isset($store[$tokenId]) ||
-                !$store[$tokenId]['expiresAt'] instanceof \DateTime ||
-                $store[$tokenId]['expiresAt'] < new \DateTime() ||
-                (bool) $store[$tokenId]['active'] === false) {
+        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
+                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime() ||
+                (bool) $_SESSION[$this->namespace][$tokenId]['active'] === false) {
             return false;
         }
 
         // A valid token exists if has not been expired yet
-        return $store[$tokenId]['value'];
+        return $_SESSION[$this->namespace][$tokenId]['value'];
     }
 
     /**
