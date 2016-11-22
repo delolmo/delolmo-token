@@ -13,13 +13,33 @@ use DelOlmo\Token\Storage\SessionDeactivableTokenStorage;
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class DeactivableTokenManager extends ExpirableTokenManager implements ExpirableTokenManagerInterface
+class DeactivableTokenManager extends AbstractTokenManager implements ExpirableTokenManagerInterface
 {
+
+    /**
+     * @var string The default interval on which tokens expire by default
+     */
+    const TOKEN_TIMEOUT = '+1 day';
+
+    /**
+     * @var \DelOlmo\Token\Encoder\TokenEncoderInterface
+     */
+    protected $encoder;
+
+    /**
+     * @var \DelOlmo\Token\Generator\TokenGeneratorInterface
+     */
+    protected $generator;
 
     /**
      * @var \DelOlmo\Token\Storage\DeactivableTokenStorageInterface
      */
     protected $storage;
+
+    /**
+     * @var \DateTime The date on which ExpirableToken objects expire by default
+     */
+    protected $timeout;
 
     /**
      * Constructor.
