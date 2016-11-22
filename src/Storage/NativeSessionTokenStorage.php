@@ -73,7 +73,7 @@ class NativeSessionTokenStorage implements TokenStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function hasToken(string $tokenId)
+    public function hasToken(string $tokenId): bool
     {
         if (!$this->sessionStarted) {
             $this->startSession();
