@@ -16,7 +16,7 @@ abstract class AbstractTokenManager
     public function getToken(string $tokenId): string
     {
         // If the given $tokenId does not exist
-        if (!$this->storage->hasToken($tokenId)) {
+        if (!$this->hasToken($tokenId)) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
