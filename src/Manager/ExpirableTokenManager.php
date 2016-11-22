@@ -2,12 +2,13 @@
 
 namespace DelOlmo\Token\Manager;
 
-use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
-use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
-use DelOlmo\Token\Storage\ExpirableTokenStorageInterface as Storage;
 use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
-use DelOlmo\Token\Storage\SessionExpirableTokenStorage;
+use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
+use DelOlmo\Token\Exception\TokenAlreadyExistsException;
+use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
+use DelOlmo\Token\Storage\ExpirableTokenStorageInterface as Storage;
+use DelOlmo\Token\Storage\SessionExpirableTokenStorage;
 
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>
@@ -50,6 +51,22 @@ class ExpirableTokenManager extends TokenManager implements ExpirableTokenManage
      * {@inheritdoc}
      */
     public function generateToken(string $tokenId, \DateTime $expiresAt = null): string
+    {
+        // Prevent overwriting an already existing token
+        if ($this->hasToken($tokenId)) {
+            $str = "A valid token already exists for the given id '%s'.";
+            $message = sprintf($str, $tokenId);
+            throw new TokenAlreadyExistsException($message);
+        }
+
+        // Return the value before hashing
+        return $this->refreshToken($tokenId, $expiresAt);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function refreshToken(string $tokenId, \DateTime $expiresAt = null)
     {
         // Value, before hashing, and timeout
         $value = $this->generator->generateToken($tokenId);

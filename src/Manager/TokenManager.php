@@ -2,13 +2,14 @@
 
 namespace DelOlmo\Token\Manager;
 
-use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
-use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
-use DelOlmo\Token\Storage\TokenStorageInterface as Storage;
 use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
-use DelOlmo\Token\Storage\SessionTokenStorage;
-use DelOlmo\Token\Generator\UriSafeTokenGenerator;
+use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
+use DelOlmo\Token\Exception\TokenAlreadyExistsException;
 use DelOlmo\Token\Exception\TokenNotFoundException;
+use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
+use DelOlmo\Token\Generator\UriSafeTokenGenerator;
+use DelOlmo\Token\Storage\SessionTokenStorage;
+use DelOlmo\Token\Storage\TokenStorageInterface as Storage;
 
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>
@@ -50,17 +51,15 @@ class TokenManager implements TokenManagerInterface
      */
     public function generateToken(string $tokenId): string
     {
-        // Value, before hashing
-        $value = $this->generator->generateToken($tokenId);
+        // Prevent overwriting an already existing valid token
+        if ($this->hasToken($tokenId)) {
+            $str = "A valid token already exists for the given id '%s'.";
+            $message = sprintf($str, $tokenId);
+            throw new TokenAlreadyExistsException($message);
+        }
 
-        // Hash the value using the provided encoder
-        $hash = $this->encoder->hash($value);
-
-        // Store the hashed value
-        $this->storage->setToken($tokenId, $hash);
-
-        // Return the value before hashing
-        return $value;
+        // Return value, before hashing
+        return $this->refreshToken($tokenId);
     }
 
     /**
@@ -101,6 +100,24 @@ class TokenManager implements TokenManagerInterface
 
         // Whether or not the hashed/encoded value and the given value match
         return $this->encoder->verify($value, $hash);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function refreshToken(string $tokenId): string
+    {
+        // Value, before hashing
+        $value = $this->generator->generateToken($tokenId);
+
+        // Hash the value using the provided encoder
+        $hash = $this->encoder->hash($value);
+
+        // Store the hashed value
+        $this->storage->setToken($tokenId, $hash);
+
+        // Return the value before hashing
+        return $value;
     }
 
     /**

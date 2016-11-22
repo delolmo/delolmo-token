@@ -2,12 +2,13 @@
 
 namespace DelOlmo\Token\Manager;
 
-use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
-use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
-use DelOlmo\Token\Storage\DeactivableTokenStorageInterface as Storage;
 use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
-use DelOlmo\Token\Storage\SessionDeactivableTokenStorage;
+use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
+use DelOlmo\Token\Exception\TokenAlreadyExistsException;
+use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
+use DelOlmo\Token\Storage\DeactivableTokenStorageInterface as Storage;
+use DelOlmo\Token\Storage\SessionDeactivableTokenStorage;
 
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>
@@ -36,11 +37,20 @@ class DeactivableTokenManager extends ExpirableTokenManager implements Expirable
         $this->timeout = $timeout ?? new \DateTime(static::TOKEN_TIMEOUT);
     }
 
-
     /**
      * {@inheritdoc}
      */
     public function generateToken(string $tokenId, \DateTime $expiresAt = null, bool $active = true): string
+    {
+
+
+        return $this->refreshToken($tokenId);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function refreshToken(string $tokenId, \DateTime $expiresAt = null, bool $active = true): string
     {
         // Value, before hashing, and timeout
         $value = $this->generator->generateToken($tokenId);
