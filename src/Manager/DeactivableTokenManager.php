@@ -2,7 +2,7 @@
 
 namespace DelOlmo\Token\Manager;
 
-use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
+use DelOlmo\Token\Encoder\DummyTokenEncoder;
 use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
 use DelOlmo\Token\Exception\TokenAlreadyExistsException;
 use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
@@ -17,7 +17,7 @@ class DeactivableTokenManager extends ExpirableTokenManager implements Expirable
 {
 
     /**
-     * @var \DelOlmo\Token\Storage\ExpirableTokenStorageInterface
+     * @var \DelOlmo\Token\Storage\DeactivableTokenStorageInterface
      */
     protected $storage;
 
@@ -26,12 +26,12 @@ class DeactivableTokenManager extends ExpirableTokenManager implements Expirable
      *
      * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
      * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
-     * @param \DelOlmo\Token\Storage\ExpirableTokenStorageInterface $storage
+     * @param \DelOlmo\Token\Storage\DeactivableTokenStorageInterface $storage
      * @param \DateTime $timeout
      */
     public function __construct(Generator $generator = null, Encoder $encoder = null, Storage $storage = null, \DateTime $timeout = null)
     {
-        $this->encoder = $encoder ?? new NativePasswordTokenEncoder();
+        $this->encoder = $encoder ?? new DummyTokenEncoder();
         $this->generator = $generator ?? new UriSafeTokenGenerator();
         $this->storage = $storage ?? new SessionDeactivableTokenStorage();
         $this->timeout = $timeout ?? new \DateTime(static::TOKEN_TIMEOUT);
@@ -42,9 +42,14 @@ class DeactivableTokenManager extends ExpirableTokenManager implements Expirable
      */
     public function generateToken(string $tokenId, \DateTime $expiresAt = null, bool $active = true): string
     {
+        // Prevent overwriting an already existing token
+        if ($this->hasToken($tokenId)) {
+            $str = "A valid token already exists for the given id '%s'.";
+            $message = sprintf($str, $tokenId);
+            throw new TokenAlreadyExistsException($message);
+        }
 
-
-        return $this->refreshToken($tokenId);
+        return $this->refreshToken($tokenId, $expiresAt, $active);
     }
 
     /**

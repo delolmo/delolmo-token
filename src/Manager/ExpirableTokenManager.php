@@ -2,7 +2,7 @@
 
 namespace DelOlmo\Token\Manager;
 
-use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
+use DelOlmo\Token\Encoder\DummyTokenEncoder;
 use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
 use DelOlmo\Token\Exception\TokenAlreadyExistsException;
 use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
@@ -41,7 +41,7 @@ class ExpirableTokenManager extends TokenManager implements ExpirableTokenManage
      */
     public function __construct(Generator $generator = null, Encoder $encoder = null, Storage $storage = null, \DateTime $timeout = null)
     {
-        $this->encoder = $encoder ?? new NativePasswordTokenEncoder();
+        $this->encoder = $encoder ?? new DummyTokenEncoder();
         $this->generator = $generator ?? new UriSafeTokenGenerator();
         $this->storage = $storage ?? new SessionExpirableTokenStorage();
         $this->timeout = $timeout ?? new \DateTime(static::TOKEN_TIMEOUT);

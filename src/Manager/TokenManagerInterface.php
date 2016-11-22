@@ -21,7 +21,7 @@ interface TokenManagerInterface
     /**
      * Generates a new token and stores it.
      *
-     * @param string $tokenId
+     * @param string $tokenId The token id
      * @return string The generated value of the token, before hashing
      * @throws DelOlmo\Token\Exception\TokenAlreadyExistsException if a valid
      * token already exists with the given token id
@@ -31,8 +31,8 @@ interface TokenManagerInterface
     /**
      * Whether or not a valid token exists for the given token id.
      *
-     * @param string $tokenId
-     * @return bool
+     * @param string $tokenId The token id
+     * @return bool Whether a valid token exists for the given token id
      */
     public function hasToken(string $tokenId): bool;
 
@@ -41,7 +41,7 @@ interface TokenManagerInterface
      *
      * @param $tokenId The token id
      * @param $value The unhashed value of the token
-     * @return bool
+     * @return bool Whether the given token is valid
      */
     public function isTokenValid(string $tokenId, string $value): bool;
 
@@ -52,8 +52,8 @@ interface TokenManagerInterface
      * or not the token existed previously. It can be used to enforce once-only
      * tokens in environments with high security needs.
      *
-     * @param string $tokenId
-     * @return string
+     * @param string $tokenId The token id
+     * @return string The generated value of the token, before hashing
      */
     public function refreshToken(string $tokenId): string;
 
