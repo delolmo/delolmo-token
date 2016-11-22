@@ -6,7 +6,7 @@ use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
 use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
 use DelOlmo\Token\Storage\TokenStorageInterface as Storage;
 use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
-use DelOlmo\Token\Storage\NativeSessionTokenStorage;
+use DelOlmo\Token\Storage\SessionTokenStorage;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
 use DelOlmo\Token\Exception\TokenNotFoundException;
 
@@ -42,7 +42,7 @@ class TokenManager implements TokenManagerInterface
     {
         $this->encoder = $encoder ?? new NativePasswordTokenEncoder();
         $this->generator = $generator ?? new UriSafeTokenGenerator();
-        $this->storage = $storage ?? new NativeSessionTokenStorage();
+        $this->storage = $storage ?? new SessionTokenStorage();
     }
 
     /**
@@ -76,7 +76,6 @@ class TokenManager implements TokenManagerInterface
         }
 
         return $this->storage->getToken($tokenId);
-
     }
 
     /**
@@ -111,6 +110,5 @@ class TokenManager implements TokenManagerInterface
     {
         return $this->storage->removeToken($tokenId);
     }
-
 
 }

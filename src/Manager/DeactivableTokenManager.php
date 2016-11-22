@@ -6,7 +6,7 @@ use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
 use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
 use DelOlmo\Token\Storage\DeactivableTokenStorageInterface as Storage;
 use DelOlmo\Token\Encoder\NativePasswordTokenEncoder;
-use DelOlmo\Token\Storage\NativeSessionDeactivableTokenStorage;
+use DelOlmo\Token\Storage\SessionDeactivableTokenStorage;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
 
 /**
@@ -32,7 +32,7 @@ class DeactivableTokenManager extends ExpirableTokenManager implements Expirable
     {
         $this->encoder = $encoder ?? new NativePasswordTokenEncoder();
         $this->generator = $generator ?? new UriSafeTokenGenerator();
-        $this->storage = $storage ?? new NativeSessionDeactivableTokenStorage();
+        $this->storage = $storage ?? new SessionDeactivableTokenStorage();
         $this->timeout = $timeout ?? new \DateTime(static::TOKEN_TIMEOUT);
     }
 
