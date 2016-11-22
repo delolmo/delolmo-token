@@ -76,7 +76,7 @@ class ExpirableTokenManager extends AbstractTokenManager implements ExpirableTok
     /**
      * {@inheritdoc}
      */
-    public function refreshToken(string $tokenId, \DateTime $expiresAt = null)
+    public function refreshToken(string $tokenId, \DateTime $expiresAt = null): string
     {
         // Value, before hashing, and timeout
         $value = $this->generator->generateToken($tokenId);

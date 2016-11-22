@@ -14,7 +14,7 @@ interface TokenManagerInterface
      * @param string $tokenId The token id
      * @return string The stored hashed value of the token
      * @throws \DelOlmo\Token\Exception\TokenNotFoundException If no valid
-     * token exists for given token id
+     * token exists for the given token id
      */
     public function getToken(string $tokenId): string;
 
@@ -24,7 +24,7 @@ interface TokenManagerInterface
      * @param string $tokenId The token id
      * @return string The generated value of the token, before hashing
      * @throws DelOlmo\Token\Exception\TokenAlreadyExistsException if a valid
-     * token already exists with the given token id
+     * token already exists for the given token id
      */
     public function generateToken(string $tokenId): string;
 
