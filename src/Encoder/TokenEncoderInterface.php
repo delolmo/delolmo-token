@@ -10,22 +10,12 @@ interface TokenEncoderInterface
 {
 
     /**
-     * @inherit
+     * {@inheritdoc}
      */
-    public static function getInfo(string $hash): array;
+    public function hash(string $value): string;
 
     /**
-     * @inherit
+     * {@inheritdoc}
      */
-    public static function hash(string $password): string;
-
-    /**
-     * @inherit
-     */
-    public static function needsRehash(string $hash): bool;
-
-    /**
-     * @inherit
-     */
-    public static function verify(string $password, string $hash): bool;
+    public function verify(string $value, string $hash): bool;
 }

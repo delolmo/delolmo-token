@@ -9,36 +9,21 @@ namespace DelOlmo\Token\Encoder;
  */
 class DummyTokenEncoder implements TokenEncoderInterface
 {
+
     /**
-     * @inherit
+     * {@inheritdoc}
      */
-    public static function getInfo(string $hash): array
+    public function hash(string $value): string
     {
-        return null;
+        return $value;
     }
 
     /**
-     * @inherit
+     * {@inheritdoc}
      */
-    public static function hash(string $password): string
+    public function verify(string $value, string $hash): bool
     {
-        return $password;
-    }
-
-    /**
-     * @inherit
-     */
-    public static function needsRehash(string $hash): bool
-    {
-        return false;
-    }
-
-    /**
-     * @inherit
-     */
-    public static function verify(string $password, string $hash): bool
-    {
-        return $password === $hash;
+        return $value === $hash;
     }
 
 }

@@ -9,35 +9,20 @@ namespace DelOlmo\Token\Encoder;
  */
 class NativePasswordTokenEncoder implements TokenEncoderInterface
 {
+
     /**
-     * @inherit
+     * {@inheritdoc}
      */
-    public static function getInfo(string $hash): array
+    public function hash(string $value): string
     {
-        return password_get_info($hash);
+        return password_hash($value, PASSWORD_DEFAULT);
     }
 
     /**
-     * @inherit
+     * {@inheritdoc}
      */
-    public static function hash(string $password): string
+    public function verify(string $value, string $hash): bool
     {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    /**
-     * @inherit
-     */
-    public static function needsRehash(string $hash): bool
-    {
-        return password_needs_rehash($hash, PASSWORD_DEFAULT);
-    }
-
-    /**
-     * @inherit
-     */
-    public static function verify(string $password, string $hash): bool
-    {
-        return password_verify($password, $hash);
+        return password_verify($value, $hash);
     }
 }
