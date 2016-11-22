@@ -9,7 +9,7 @@ use DelOlmo\Token\Exception\TokenNotFoundException;
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class NativeSessionTokenStorage implements TokenStorageInterface
+class SessionTokenStorage implements TokenStorageInterface
 {
 
     /**

@@ -9,7 +9,7 @@ use DelOlmo\Token\Exception\TokenNotFoundException;
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class NativeSessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
+class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
 {
 
     /**
@@ -53,8 +53,7 @@ class NativeSessionDeactivableTokenStorage implements DeactivableTokenStorageInt
 
         if (!isset($store[$tokenId]) ||
                 !$store[$tokenId]['expiresAt'] instanceof \DateTime ||
-                $store[$tokenId]['expiresAt'] < new \DateTime() ||
-                (bool) $store[$tokenId]['active'] === false) {
+                $store[$tokenId]['expiresAt'] < new \DateTime()) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
@@ -66,7 +65,7 @@ class NativeSessionDeactivableTokenStorage implements DeactivableTokenStorageInt
     /**
      * {@inheritdoc}
      */
-    public function setToken(string $tokenId, string $value, \DateTime $expiresAt, bool $active)
+    public function setToken(string $tokenId, string $value, \DateTime $expiresAt)
     {
         if (!$this->sessionStarted) {
             $this->startSession();
@@ -74,8 +73,7 @@ class NativeSessionDeactivableTokenStorage implements DeactivableTokenStorageInt
 
         $_SESSION[$this->namespace][$tokenId] = [
             'value' => $value,
-            'expiresAt' => $expiresAt,
-            'active' => $active
+            'expiresAt' => $expiresAt
         ];
     }
 
@@ -92,8 +90,7 @@ class NativeSessionDeactivableTokenStorage implements DeactivableTokenStorageInt
 
         if (!isset($store[$tokenId]) ||
                 !$store[$tokenId]['expiresAt'] instanceof \DateTime ||
-                $store[$tokenId]['expiresAt'] < new \DateTime() ||
-                (bool) $store[$tokenId]['active'] === false) {
+                $store[$tokenId]['expiresAt'] < new \DateTime()) {
             return false;
         }
 
