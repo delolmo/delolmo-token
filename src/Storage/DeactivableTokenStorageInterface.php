@@ -20,5 +20,5 @@ interface DeactivableTokenStorageInterface extends BaseInterface
      * @param \DateTime $expiresAt The date and time on which the token expires
      * @param bool $active Whether the token must be stored as active or not
      */
-    public function setToken(string $tokenId, string $value, \DateTime $expiresAt, bool $active): string;
+    public function setToken(string $tokenId, string $value, \DateTime $expiresAt, bool $active);
 }

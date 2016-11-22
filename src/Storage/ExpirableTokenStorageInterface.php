@@ -19,5 +19,5 @@ interface ExpirableTokenStorageInterface extends BaseInterface
      * @param string $value The hashed token value
      * @param \DateTime $expiresAt The date and time on which the token expires
      */
-    public function setToken(string $tokenId, string $value, \DateTime $expiresAt): string;
+    public function setToken(string $tokenId, string $value, \DateTime $expiresAt);
 }
