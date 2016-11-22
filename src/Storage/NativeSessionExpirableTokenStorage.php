@@ -43,7 +43,7 @@ class NativeSessionExpirableTokenStorage implements ExpirableTokenStorageInterfa
     /**
      * {@inheritdoc}
      */
-    public function getToken(string $tokenId)
+    public function getToken(string $tokenId): string
     {
         if (!$this->sessionStarted) {
             $this->startSession();
