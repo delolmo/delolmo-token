@@ -70,7 +70,7 @@ class TokenManager implements TokenManagerInterface
     {
         // If the given $tokenId does not exist
         if (!$this->storage->hasToken($tokenId)) {
-            $str = "The CSRF token with ID '%s' does not exist.";
+            $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
         }
