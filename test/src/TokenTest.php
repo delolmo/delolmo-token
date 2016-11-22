@@ -28,7 +28,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
      */
     public function test__toString()
     {
-        $this->assertEquals((string) $this->token, 'bar');
+        $this->assertSame((string) $this->token, 'bar');
     }
 
     /**
@@ -36,7 +36,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetId()
     {
-        $this->assertEquals($this->token->getId(), 'foo');
+        $this->assertSame($this->token->getId(), 'foo');
     }
 
     /**
@@ -44,7 +44,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetValue()
     {
-        $this->assertEquals($this->token->getValue(), 'bar');
+        $this->assertSame($this->token->getValue(), 'bar');
     }
 
 }
