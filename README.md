@@ -9,11 +9,10 @@ cross-site request forgery (CSRF) token manager.
 
 This library is a standalone component with no third-party dependencies.
 
-##Installation
+##Warning
 
-Install this package via `Composer`:
-
-    composer require delolmo/delolmo-invoice "~1.0"
+This library is actively being developed. Please don't use it in production
+environments yet.
 
 ##Brief description of inner workings
 
@@ -27,3 +26,7 @@ require hashing a token before storing it, e.g., reset password tokens should
 be hashed before being stored in a database (for exactly the same reasons 
 passwords are).
 * A generator component, used to generate token values.
+
+##The CsrfTokenManager
+
+
