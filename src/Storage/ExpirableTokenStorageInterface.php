@@ -29,6 +29,6 @@ interface ExpirableTokenStorageInterface extends BaseInterface
      * @return string|null Returns the expired hashed token value if a valid
      * one existed, NULL otherwise
      */
-    public function expireToken(string $tokenId): bool;
+    public function expireToken(string $tokenId);
     
 }
