@@ -4,6 +4,7 @@ namespace DelOlmo\Token\Storage\Db;
 
 use DelOlmo\Token\Exception\DbColumnNotFoundException;
 use DelOlmo\Token\Exception\DbTableNotFoundException;
+use DelOlmo\Token\Exception\DbRuntimeException;
 use DelOlmo\Token\Exception\TokenNotFoundException;
 use DelOlmo\Token\Storage\TokenStorageInterface;
 use Doctrine\DBAL\Connection;
@@ -61,7 +62,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
         // List all the columns for the given table
         $columns = $schema->listTableColumns($table);
         $columnsList = [];
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             $columnsList[] = $column->getName();
         }
 
@@ -99,15 +100,28 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
             throw new TokenNotFoundException($message);
         }
 
-        $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
-        $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
+        try {
+            
+            $connection = $this->connection;
+            $table = $connection->quoteIdentifier($this->table);
+            $idCol = $connection->quoteIdentifier($this->columns['id']);
+            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $tokenId);
-        $stmt->execute();
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue('id', $tokenId);
+            $stmt->execute();
+            $token = $stmt->fetch()[$this->columns['value']];
+            
+        } catch (\Exception $exception) {
 
-        return $stmt->fetch()[$this->columns['value']];
+            $str = "An unexpected exception was thrown while executing the "
+                    . "following query: '%s'. The complete error message was: "
+                    . "%s";
+            $message = sprintf($str, $sql, $exception->getMessage());
+            throw new DbRuntimeException($message);
+        }
+
+        return $token;
     }
 
     /**
@@ -115,15 +129,28 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
      */
     public function hasToken(string $tokenId): bool
     {
-        $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
-        $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
+        try {
+            
+            $connection = $this->connection;
+            $table = $connection->quoteIdentifier($this->table);
+            $idCol = $connection->quoteIdentifier($this->columns['id']);
+            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $tokenId);
-        $stmt->execute();
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue('id', $tokenId);
+            $stmt->execute();
+            $rowCount = $stmt->rowCount();
 
-        return $stmt->rowCount() !== 0;
+        } catch (\Exception $exception) {
+
+            $str = "An unexpected exception was thrown while executing the "
+                    . "following query: '%s'. The complete error message was: "
+                    . "%s";
+            $message = sprintf($str, $sql, $exception->getMessage());
+            throw new DbRuntimeException($message);
+        }
+
+        return $rowCount !== 0;
     }
 
     /**
@@ -135,15 +162,27 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
             return null;
         }
 
-        $token = $this->getToken($tokenId);
+        try {
+            
+            $token = $this->getToken($tokenId);
+            
+            $connection = $this->connection;
+            $table = $connection->quoteIdentifier($this->table);
+            $idCol = $connection->quoteIdentifier($this->columns['id']);
+            $sql = "DELETE FROM {$table} WHERE {$idCol} = :id";
+            
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue('id', $tokenId);
+            $stmt->execute();
+            
+        } catch (\Exception $exception) {
 
-        $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
-        $sql = "DELETE FROM {$table} WHERE {$idCol} = :id";
-
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $tokenId);
-        $stmt->execute();
+            $str = "An unexpected exception was thrown while executing the "
+                    . "following query: '%s'. The complete error message was: "
+                    . "%s";
+            $message = sprintf($str, $sql, $exception->getMessage());
+            throw new DbRuntimeException($message);
+        }
 
         return $token;
     }
@@ -153,20 +192,30 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
      */
     public function setToken(string $tokenId, string $value)
     {
-        $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
-        $valueCol = $this->connection->quoteIdentifier($this->columns['value']);
-        
-        if ($this->hasToken($tokenId)) {
-            $sql = "UPDATE {$table} SET {$valueCol} = :value WHERE {$idCol} = :id";
-        } else {
-            $sql = "INSERT INTO {$table} ({$idCol}, {$valueCol}) VALUES (:id, :value)";
-        }
+        try {
+            
+            $connection = $this->connection;
+            $table = $connection->quoteIdentifier($this->table);
+            $idCol = $connection->quoteIdentifier($this->columns['id']);
+            $valueCol = $connection->quoteIdentifier($this->columns['value']);
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindValue('id', $tokenId);
-        $stmt->bindValue('value', $value);
-        $stmt->execute();
+            $sql = $this->hasToken($tokenId) ?
+                "UPDATE {$table} SET {$valueCol} = :value WHERE {$idCol} = :id" :
+                "INSERT INTO {$table} ({$idCol}, {$valueCol}) VALUES (:id, :value)";
+
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue('id', $tokenId);
+            $stmt->bindValue('value', $value);
+            $stmt->execute();
+            
+        } catch (\Exception $exception) {
+
+            $str = "An unexpected exception was thrown while executing the "
+                    . "following query: '%s'. The complete error message was: "
+                    . "%s";
+            $message = sprintf($str, $sql, $exception->getMessage());
+            throw new DbRuntimeException($message);
+        }
     }
 
 }
