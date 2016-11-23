@@ -7,7 +7,7 @@ use DelOlmo\Token\Encoder\TokenEncoderInterface as Encoder;
 use DelOlmo\Token\Exception\TokenAlreadyExistsException;
 use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
-use DelOlmo\Token\Storage\SessionTokenStorage;
+use DelOlmo\Token\Storage\Session\SessionTokenStorage;
 use DelOlmo\Token\Storage\TokenStorageInterface as Storage;
 
 /**

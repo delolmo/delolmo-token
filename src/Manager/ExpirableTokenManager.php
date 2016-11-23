@@ -8,7 +8,7 @@ use DelOlmo\Token\Exception\TokenAlreadyExistsException;
 use DelOlmo\Token\Generator\TokenGeneratorInterface as Generator;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
 use DelOlmo\Token\Storage\ExpirableTokenStorageInterface as Storage;
-use DelOlmo\Token\Storage\SessionExpirableTokenStorage;
+use DelOlmo\Token\Storage\Session\SessionExpirableTokenStorage;
 
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>

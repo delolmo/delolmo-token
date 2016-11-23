@@ -4,7 +4,7 @@ namespace DelOlmo\Token\Manager;
 
 use DelOlmo\Token\Encoder\DummyTokenEncoder;
 use DelOlmo\Token\Generator\UriSafeTokenGenerator;
-use DelOlmo\Token\Storage\SessionTokenStorage;
+use DelOlmo\Token\Storage\Session\SessionTokenStorage;
 
 /**
  * An object that manages cross-site request forgery (CSRF) tokens.
