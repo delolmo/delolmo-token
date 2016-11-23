@@ -225,16 +225,16 @@ class DoctrineTokenStorage implements TokenStorageInterface
             $fieldName = $parameter->getName();
 
             // Check that all parameters have been passed
-            if (!isset($options[$fieldName])) {
+            if (!isset($options['columns'][$fieldName])) {
                 $str = "The column '%s' field is missing";
                 $message = sprintf($str, $parameter->getName());
                 throw new DbMissingColumnException($message);
             }
 
             // Check that the given fields exist
-            if (!self::fieldExists($connection, $options['table'], $options[$fieldName])) {
+            if (!self::fieldExists($connection, $options['table'], $options['columns'][$fieldName])) {
                 $str = "'%s' does not appear to be a valid column name";
-                $message = sprintf($str, $options[$fieldName], $options['table']);
+                $message = sprintf($str, $options['columns'][$fieldName], $options['table']);
                 throw new DbColumnNotFoundException($message);
             }
         }
