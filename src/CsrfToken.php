@@ -7,6 +7,6 @@ namespace DelOlmo\Token;
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class CsrfToken extends Token {
+class CsrfToken extends ExpirableToken {
     
 }
