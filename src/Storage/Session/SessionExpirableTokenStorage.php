@@ -50,9 +50,7 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
             $this->startSession();
         }
 
-        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
-                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
-                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime()) {
+        if (!$this->hasToken($tokenId)) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
@@ -85,14 +83,12 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
             $this->startSession();
         }
 
-        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
-                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
-                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime()) {
-            return false;
-        }
-
-        // A valid token exists if has not been expired yet
-        return $_SESSION[$this->namespace][$tokenId]['value'];
+        return isset($_SESSION[$this->namespace][$tokenId]) &&
+                isset($_SESSION[$this->namespace][$tokenId]['value']) &&
+                isset($_SESSION[$this->namespace][$tokenId]['expiresAt']) &&
+                is_string($_SESSION[$this->namespace][$tokenId]['value']) &&
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime &&
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] >= new \DateTime();
     }
 
     /**

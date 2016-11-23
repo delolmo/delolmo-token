@@ -50,10 +50,7 @@ class SessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
             $this->startSession();
         }
 
-        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
-                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
-                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime() ||
-                (bool) $_SESSION[$this->namespace][$tokenId]['active'] === false) {
+        if (!$this->hasToken($tokenId)) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
@@ -87,15 +84,15 @@ class SessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
             $this->startSession();
         }
 
-        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
-                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
-                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime() ||
-                (bool) $_SESSION[$this->namespace][$tokenId]['active'] === false) {
-            return false;
-        }
-
-        // A valid token exists if has not been expired yet
-        return $_SESSION[$this->namespace][$tokenId]['value'];
+        return isset($_SESSION[$this->namespace][$tokenId]) &&
+                isset($_SESSION[$this->namespace][$tokenId]['value']) &&
+                isset($_SESSION[$this->namespace][$tokenId]['expiresAt']) &&
+                isset($_SESSION[$this->namespace][$tokenId]['active']) &&
+                is_string($_SESSION[$this->namespace][$tokenId]['value']) &&
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime &&
+                is_bool($_SESSION[$this->namespace][$tokenId]['active']) &&
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] >= new \DateTime() &&
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] === true;
     }
 
     /**
