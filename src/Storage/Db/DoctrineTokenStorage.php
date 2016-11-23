@@ -38,11 +38,6 @@ class DoctrineTokenStorage implements TokenStorageInterface
     protected $columns = [];
 
     /**
-     * @var array An array holding all the required parameters
-     */
-    protected static $parameters = null;
-
-    /**
      * Constructor
      * 
      * @param Connection $connection
@@ -249,15 +244,16 @@ class DoctrineTokenStorage implements TokenStorageInterface
      */
     protected static function getTokenParameters(): array
     {
-
-        if (self::$parameters === null) {
+        static $parameters = null;
+        
+        if ($parameters === null) {
             $interface = array_keys(class_implements(__CLASS__));
             $reflection = new \ReflectionClass($interface[0]);
             $setTokenMethod = $reflection->getMethod('setToken');
-            self::$parameters = $setTokenMethod->getParameters();
+            $parameters = $setTokenMethod->getParameters();
         }
 
-        return self::$parameters;
+        return $parameters;
     }
 
     /**
