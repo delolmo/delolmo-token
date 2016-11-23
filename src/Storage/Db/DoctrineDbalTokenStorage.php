@@ -139,7 +139,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
 
         $table = $this->connection->quoteIdentifier($this->table);
         $idCol = $this->connection->quoteIdentifier($this->columns['id']);
-        $sql = "DELETE {$table} WHERE {$idCol} = :id";
+        $sql = "DELETE FROM {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $tokenId);
