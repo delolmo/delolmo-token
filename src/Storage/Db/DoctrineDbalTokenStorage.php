@@ -100,7 +100,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
         }
 
         $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->id);
+        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
         $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
@@ -116,7 +116,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
     public function hasToken(string $tokenId): bool
     {
         $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->id);
+        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
         $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
@@ -138,7 +138,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
         $token = $this->getToken($tokenId);
 
         $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->id);
+        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
         $sql = "DELETE {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
@@ -154,8 +154,8 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
     public function setToken(string $tokenId, string $value)
     {
         $table = $this->connection->quoteIdentifier($this->table);
-        $idCol = $this->connection->quoteIdentifier($this->id);
-        $valueCol = $this->connection->quoteIdentifier($this->value);
+        $idCol = $this->connection->quoteIdentifier($this->columns['id']);
+        $valueCol = $this->connection->quoteIdentifier($this->columns['value']);
         
         if ($this->hasToken($tokenId)) {
             $sql = "UPDATE {$table} SET {$valueCol} = :value WHERE {$idCol} = :id";
