@@ -21,4 +21,21 @@ interface ExpirableTokenStorageInterface extends BaseInterface
      * @return void
      */
     public function setToken(string $tokenId, string $value, \DateTime $expiresAt);
+    
+    /**
+     * Expires the latest valid token.
+     * 
+     * @param string $tokenId
+     * @return string|null Returns the expired hashed token value if a valid
+     * one existed, NULL otherwise
+     */
+    public function expireToken(string $tokenId): bool;
+    
+    /**
+     * Expires all valid tokens.
+     * 
+     * @param string $tokenId
+     * @return void
+     */
+    public function expireTokens(string $tokenId);
 }

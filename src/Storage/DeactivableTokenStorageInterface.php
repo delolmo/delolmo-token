@@ -22,4 +22,21 @@ interface DeactivableTokenStorageInterface extends BaseInterface
      * @return void
      */
     public function setToken(string $tokenId, string $value, \DateTime $expiresAt, bool $active);
+    
+    /**
+     * Deactivates the latest valid token.
+     * 
+     * @param string $tokenId
+     * @return string|null Returns the expired hashed token value if a valid
+     * one existed, NULL otherwise
+     */
+    public function deactivateToken(string $tokenId);
+    
+    /**
+     * Deactivates all valid tokens.
+     * 
+     * @param string $tokenId
+     * @return void
+     */
+    public function deactivateTokens(string $tokenId);
 }
