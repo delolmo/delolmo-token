@@ -28,6 +28,6 @@ class CsrfTokenManager extends ExpirableTokenManager
         $encoder = new DummyTokenEncoder();
         $storage = new SessionExpirableTokenStorage('_csrf');
         
-        parent::__construct($generator, $encoder, $storage);
+        parent::__construct($storage, $encoder, $generator);
     }
 }
