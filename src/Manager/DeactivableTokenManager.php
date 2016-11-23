@@ -44,9 +44,9 @@ class DeactivableTokenManager extends AbstractTokenManager implements Deactivabl
     /**
      * Constructor.
      *
-     * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
-     * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
      * @param \DelOlmo\Token\Storage\DeactivableTokenStorageInterface $storage
+     * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
+     * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
      * @param \DateTime $timeout
      */
     public function __construct(Generator $generator = null, Encoder $encoder = null, Storage $storage = null, \DateTime $timeout = null)

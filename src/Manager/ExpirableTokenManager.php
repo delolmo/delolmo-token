@@ -44,12 +44,12 @@ class ExpirableTokenManager extends AbstractTokenManager implements ExpirableTok
     /**
      * Constructor.
      *
-     * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
-     * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
      * @param \DelOlmo\Token\Storage\ExpirableTokenStorageInterface $storage
+     * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
+     * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
      * @param \DateTime $timeout
      */
-    public function __construct(Generator $generator = null, Encoder $encoder = null, Storage $storage = null, \DateTime $timeout = null)
+    public function __construct(Storage $storage = null, Encoder $encoder = null, Generator $generator = null, \DateTime $timeout = null)
     {
         $this->encoder = $encoder ?? new DummyTokenEncoder();
         $this->generator = $generator ?? new UriSafeTokenGenerator();

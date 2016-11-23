@@ -34,11 +34,11 @@ class TokenManager extends AbstractTokenManager implements TokenManagerInterface
     /**
      * Constructor.
      *
-     * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
-     * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
      * @param \DelOlmo\Token\Storage\TokenStorageInterface $storage
+     * @param \DelOlmo\Token\Encoder\TokenEncoderInterface $encoder
+     * @param \DelOlmo\Token\Generator\TokenGeneratorInterface $generator
      */
-    public function __construct(Generator $generator = null, Encoder $encoder = null, Storage $storage = null)
+    public function __construct(Storage $storage = null, Encoder $encoder = null, Generator $generator = null)
     {
         $this->encoder = $encoder ?? new DummyTokenEncoder();
         $this->generator = $generator ?? new UriSafeTokenGenerator();
