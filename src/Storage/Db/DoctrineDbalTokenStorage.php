@@ -12,7 +12,7 @@ use Doctrine\DBAL\Connection;
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class DoctrineDbalTokenStorage implements TokenStorageInterface, BaseTokenStorageInterface
+class DoctrineDbalTokenStorage implements TokenStorageInterface
 {
 
     /**
