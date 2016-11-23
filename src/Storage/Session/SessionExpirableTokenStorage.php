@@ -1,6 +1,6 @@
 <?php
 
-namespace DelOlmo\Token\Storage;
+namespace DelOlmo\Token\Storage\Session;
 
 use DelOlmo\Token\Exception\TokenNotFoundException;
 
@@ -9,7 +9,7 @@ use DelOlmo\Token\Exception\TokenNotFoundException;
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class SessionTokenStorage implements TokenStorageInterface
+class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
 {
 
     /**
@@ -49,25 +49,30 @@ class SessionTokenStorage implements TokenStorageInterface
             $this->startSession();
         }
 
-        if (!isset($_SESSION[$this->namespace][$tokenId])) {
+        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
+                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime()) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
         }
 
-        return (string) $_SESSION[$this->namespace][$tokenId];
+        return (string) $_SESSION[$this->namespace][$tokenId]['value'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setToken(string $tokenId, string $token)
+    public function setToken(string $tokenId, string $value, \DateTime $expiresAt)
     {
         if (!$this->sessionStarted) {
             $this->startSession();
         }
 
-        $_SESSION[$this->namespace][$tokenId] = (string) $token;
+        $_SESSION[$this->namespace][$tokenId] = [
+            'value' => $value,
+            'expiresAt' => $expiresAt
+        ];
     }
 
     /**
@@ -79,7 +84,14 @@ class SessionTokenStorage implements TokenStorageInterface
             $this->startSession();
         }
 
-        return isset($_SESSION[$this->namespace][$tokenId]);
+        if (!isset($_SESSION[$this->namespace][$tokenId]) ||
+                !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime()) {
+            return false;
+        }
+
+        // A valid token exists if has not been expired yet
+        return $_SESSION[$this->namespace][$tokenId]['value'];
     }
 
     /**

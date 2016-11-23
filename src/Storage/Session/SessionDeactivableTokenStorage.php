@@ -1,6 +1,6 @@
 <?php
 
-namespace DelOlmo\Token\Storage;
+namespace DelOlmo\Token\Storage\Session;
 
 use DelOlmo\Token\Exception\TokenNotFoundException;
 
@@ -9,7 +9,7 @@ use DelOlmo\Token\Exception\TokenNotFoundException;
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
+class SessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
 {
 
     /**
@@ -51,7 +51,8 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
 
         if (!isset($_SESSION[$this->namespace][$tokenId]) ||
                 !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
-                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime()) {
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime() ||
+                (bool) $_SESSION[$this->namespace][$tokenId]['active'] === false) {
             $str = "No valid token exists for the given id '%s'.";
             $message = sprintf($str, $tokenId);
             throw new TokenNotFoundException($message);
@@ -63,7 +64,7 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setToken(string $tokenId, string $value, \DateTime $expiresAt)
+    public function setToken(string $tokenId, string $value, \DateTime $expiresAt, bool $active)
     {
         if (!$this->sessionStarted) {
             $this->startSession();
@@ -71,7 +72,8 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
 
         $_SESSION[$this->namespace][$tokenId] = [
             'value' => $value,
-            'expiresAt' => $expiresAt
+            'expiresAt' => $expiresAt,
+            'active' => $active
         ];
     }
 
@@ -86,7 +88,8 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
 
         if (!isset($_SESSION[$this->namespace][$tokenId]) ||
                 !$_SESSION[$this->namespace][$tokenId]['expiresAt'] instanceof \DateTime ||
-                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime()) {
+                $_SESSION[$this->namespace][$tokenId]['expiresAt'] < new \DateTime() ||
+                (bool) $_SESSION[$this->namespace][$tokenId]['active'] === false) {
             return false;
         }
 

@@ -17,6 +17,7 @@ interface TokenStorageInterface extends BaseInterface
      *
      * @param string $tokenId The token id
      * @param string $value   The hashed token value
+     * @return void
      */
     public function setToken(string $tokenId, string $value);
 }
