@@ -13,7 +13,7 @@ use DelOlmo\Token\Storage\Session\SessionDeactivableTokenStorage;
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class DeactivableTokenManager extends AbstractTokenManager implements ExpirableTokenManagerInterface
+class DeactivableTokenManager extends AbstractTokenManager implements DeactivableTokenManagerInterface
 {
 
     /**

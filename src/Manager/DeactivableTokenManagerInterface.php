@@ -5,7 +5,7 @@ namespace DelOlmo\Token\Manager;
 /**
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-interface ExpirableTokenManagerInterface
+interface DeactivableTokenManagerInterface
 {
     /**
      * Returns the stored value of a token.
