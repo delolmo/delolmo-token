@@ -10,11 +10,14 @@ use DelOlmo\Token\Storage\TokenStorageInterface;
 use Doctrine\DBAL\Connection;
 
 /**
- * Description of DoctrineDbalTokenStorage
+ * An object to store tokens using a Doctrine DBAL connection. The class
+ * constructor requires (1)a valid database connection, (2) the name of the 
+ * table where the tokens are stored, and (3) the names of the columns for each 
+ * one of the token fields (id and value).
  *
  * @author Antonio del Olmo García <adelolmog@gmail.com>
  */
-class DoctrineDbalTokenStorage implements TokenStorageInterface
+class DoctrineExpirableTokenStorage implements TokenStorageInterface
 {
 
     /**
@@ -47,6 +50,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
         $table = $options['table'] ?? 'tokens';
         $id = $options['columns']['id'] ?? 'id';
         $value = $options['columns']['value'] ?? 'value';
+        $expiresAt = $options['columns']['expiresAt'] ?? 'expires_at';
 
         // Get the schema manager to inspect the database
         $schema = $connection->getSchemaManager();
@@ -81,12 +85,21 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
             $message = sprintf($str, $id, $table);
             throw new DbColumnNotFoundException($message);
         }
+        
+        // Check the validity of the 'expiresAt' column
+        if (!in_array($expiresAt, $columnsList)) {
+            $str = "'%s' does not appear to be an existing column name in "
+                    . "the table '%s'";
+            $message = sprintf($str, $id, $table);
+            throw new DbColumnNotFoundException($message);
+        }
 
         // Everything went ok, store the values
         $this->connection = $connection;
         $this->table = $table;
         $this->columns['id'] = $id;
         $this->columns['value'] = $value;
+        $this->columns['expiresAt'] = $expiresAt;
     }
 
     /**
@@ -134,10 +147,13 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
             $connection = $this->connection;
             $table = $connection->quoteIdentifier($this->table);
             $idCol = $connection->quoteIdentifier($this->columns['id']);
-            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
+            $expiresAtCol = $connection->quoteIdentifier($this->columns['expiresAt']);
+            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id AND "
+                . "{$expiresAtCol} < :expires_at";
 
             $stmt = $connection->prepare($sql);
             $stmt->bindValue('id', $tokenId);
+            $stmt->bindValue('expires_at', (new \DateTime())->format('Y-m-d H:i:s'));
             $stmt->execute();
             $rowCount = $stmt->rowCount();
 
