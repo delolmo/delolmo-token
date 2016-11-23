@@ -84,7 +84,7 @@ class DoctrineTokenStorage implements TokenStorageInterface
             $connection = $this->connection;
             $table = $connection->quoteIdentifier($this->table);
             $idCol = $connection->quoteIdentifier($this->columns['tokenId']);
-            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
+            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :tokenId";
 
             $stmt = $connection->prepare($sql);
             $stmt->bindValue('tokenId', $tokenId);
@@ -112,7 +112,7 @@ class DoctrineTokenStorage implements TokenStorageInterface
             $connection = $this->connection;
             $table = $connection->quoteIdentifier($this->table);
             $idCol = $connection->quoteIdentifier($this->columns['tokenId']);
-            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
+            $sql = "SELECT * FROM {$table} WHERE {$idCol} = :tokenId";
 
             $stmt = $connection->prepare($sql);
             $stmt->bindValue('tokenId', $tokenId);
@@ -146,7 +146,7 @@ class DoctrineTokenStorage implements TokenStorageInterface
             $connection = $this->connection;
             $table = $connection->quoteIdentifier($this->table);
             $idCol = $connection->quoteIdentifier($this->columns['tokenId']);
-            $sql = "DELETE FROM {$table} WHERE {$idCol} = :id";
+            $sql = "DELETE FROM {$table} WHERE {$idCol} = :tokenId";
 
             $stmt = $connection->prepare($sql);
             $stmt->bindValue('tokenId', $tokenId);
@@ -176,8 +176,8 @@ class DoctrineTokenStorage implements TokenStorageInterface
             $valueCol = $connection->quoteIdentifier($this->columns['value']);
 
             $sql = $this->hasToken($tokenId) ?
-                    "UPDATE {$table} SET {$valueCol} = :value WHERE {$idCol} = :id" :
-                    "INSERT INTO {$table} ({$idCol}, {$valueCol}) VALUES (:id, :value)";
+                    "UPDATE {$table} SET {$valueCol} = :value WHERE {$idCol} = :tokenId" :
+                    "INSERT INTO {$table} ({$idCol}, {$valueCol}) VALUES (:tokenId, :value)";
 
             $stmt = $connection->prepare($sql);
             $stmt->bindValue('tokenId', $tokenId);
