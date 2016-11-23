@@ -83,9 +83,9 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
 
         // Everything went ok, store the values
         $this->connection = $connection;
-        $this->table = $connection->quoteIdentifier($table);
-        $this->columns['id'] = $connection->quoteIdentifier($id);
-        $this->columns['value'] = $connection->quoteIdentifier($value);
+        $this->table = $table;
+        $this->columns['id'] = $id;
+        $this->columns['value'] = $value;
     }
 
     /**
@@ -99,8 +99,9 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
             throw new TokenNotFoundException($message);
         }
 
-        $sql = "SELECT * FROM {$this->table} "
-                . "WHERE {$this->columns['id']} = :id";
+        $table = $this->connection->quoteIdentifier($this->table);
+        $idCol = $this->connection->quoteIdentifier($this->id);
+        $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $tokenId);
@@ -114,8 +115,9 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
      */
     public function hasToken(string $tokenId): bool
     {
-        $sql = "SELECT * FROM {$this->table} "
-                . "WHERE {$this->columns['id']} = :id";
+        $table = $this->connection->quoteIdentifier($this->table);
+        $idCol = $this->connection->quoteIdentifier($this->id);
+        $sql = "SELECT * FROM {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $tokenId);
@@ -135,7 +137,9 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
 
         $token = $this->getToken($tokenId);
 
-        $sql = "DELETE {$this->table} WHERE {$this->columns['id']} = :id";
+        $table = $this->connection->quoteIdentifier($this->table);
+        $idCol = $this->connection->quoteIdentifier($this->id);
+        $sql = "DELETE {$table} WHERE {$idCol} = :id";
 
         $stmt = $this->connection->prepare($sql);
         $stmt->bindValue('id', $tokenId);
@@ -149,12 +153,14 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
      */
     public function setToken(string $tokenId, string $value)
     {
+        $table = $this->connection->quoteIdentifier($this->table);
+        $idCol = $this->connection->quoteIdentifier($this->id);
+        $valueCol = $this->connection->quoteIdentifier($this->value);
+        
         if ($this->hasToken($tokenId)) {
-            $sql = "UPDATE {$this->table} SET {$this->columns['value']} = "
-                    . ":value WHERE {$this->columns['id']} = :id";
+            $sql = "UPDATE {$table} SET {$valueCol} = :value WHERE {$idCol} = :id";
         } else {
-            $sql = "INSERT INTO {$this->table} ({$this->columns['id']}, "
-                    . "{$this->columns['value']}) VALUES (:id, :value)";
+            $sql = "INSERT INTO {$table} ({$idCol}, {$valueCol}) VALUES (:id, :value)";
         }
 
         $stmt = $this->connection->prepare($sql);
