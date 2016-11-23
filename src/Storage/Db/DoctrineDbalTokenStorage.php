@@ -60,9 +60,13 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
 
         // List all the columns for the given table
         $columns = $schema->listTableColumns($table);
+        $columnsList = [];
+        foreach($columns as $column) {
+            $columnsList[] = $column->getName();
+        }
 
         // Check for the validity of the 'id' column
-        if (!in_array($id, $columns)) {
+        if (!in_array($id, $columnsList)) {
             $str = "'%s' does not appear to be an existing column name in "
                     . "the table '%s'";
             $message = sprintf($str, $id, $table);
@@ -70,7 +74,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
         }
 
         // Check the validity of the 'value' column
-        if (!in_array($value, $columns)) {
+        if (!in_array($value, $columnsList)) {
             $str = "'%s' does not appear to be an existing column name in "
                     . "the table '%s'";
             $message = sprintf($str, $id, $table);
