@@ -284,7 +284,7 @@ class DoctrineTokenStorage implements TokenStorageInterface
      */
     protected static function fieldExists(Connection $connection, string $table, string $field): bool
     {
-        if (!self::tableExist($connection, $table)) {
+        if (!self::tableExists($connection, $table)) {
             return false;
         }
 
