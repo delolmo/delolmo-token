@@ -1,6 +1,6 @@
 <?php
 
-namespace DelOlmo\Token\Storage;
+namespace DelOlmo\Token\Storage\Db;
 
 use DelOlmo\Token\Exception\DbColumnNotFoundException;
 use DelOlmo\Token\Exception\DbTableNotFoundException;
