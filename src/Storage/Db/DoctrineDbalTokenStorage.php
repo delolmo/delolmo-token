@@ -51,7 +51,7 @@ class DoctrineDbalTokenStorage implements TokenStorageInterface
         $schema = $connection->getSchemaManager();
 
         // Check for the validity of the table name
-        if (!$schema - tablesExist([$this->table])) {
+        if (!$schema->tablesExist([$this->table])) {
             $str = "'%s' does not appear to be an existing table name in the "
                     . "given database.";
             $message = sprintf($str, $this->table);
