@@ -2,8 +2,8 @@
 
 namespace DelOlmo\Token\Storage\Session;
 
-use DelOlmo\Token\Storage\DeactivableTokenStorageInterface;
 use DelOlmo\Token\Exception\TokenNotFoundException;
+use DelOlmo\Token\Storage\DeactivableTokenStorageInterface;
 
 /**
  * Token storage that uses PHP's native session handling.

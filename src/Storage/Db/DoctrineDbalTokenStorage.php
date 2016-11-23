@@ -5,6 +5,7 @@ namespace DelOlmo\Token\Storage\Db;
 use DelOlmo\Token\Exception\DbColumnNotFoundException;
 use DelOlmo\Token\Exception\DbTableNotFoundException;
 use DelOlmo\Token\Exception\TokenNotFoundException;
+use DelOlmo\Token\Storage\TokenStorageInterface;
 use Doctrine\DBAL\Connection;
 
 /**
