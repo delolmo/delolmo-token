@@ -2,6 +2,7 @@
 
 namespace DelOlmo\Token\Storage\Session;
 
+use DelOlmo\Token\Storage\DeactivableTokenStorageInterface;
 use DelOlmo\Token\Exception\TokenNotFoundException;
 
 /**
