@@ -32,11 +32,4 @@ interface DeactivableTokenStorageInterface extends BaseInterface
      */
     public function deactivateToken(string $tokenId);
     
-    /**
-     * Deactivates all valid tokens.
-     * 
-     * @param string $tokenId
-     * @return void
-     */
-    public function deactivateTokens(string $tokenId);
 }

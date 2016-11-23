@@ -31,11 +31,4 @@ interface ExpirableTokenStorageInterface extends BaseInterface
      */
     public function expireToken(string $tokenId): bool;
     
-    /**
-     * Expires all valid tokens.
-     * 
-     * @param string $tokenId
-     * @return void
-     */
-    public function expireTokens(string $tokenId);
 }
