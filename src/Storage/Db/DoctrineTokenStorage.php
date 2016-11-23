@@ -64,7 +64,7 @@ class DoctrineTokenStorage implements TokenStorageInterface
         // Save parameters
         foreach (self::getTokenParameters() as $parameter) {
             $fieldName = $parameter->getName();
-            $this->columns[$fieldName] = $options[$fieldName];
+            $this->columns[$fieldName] = $options['columns'][$fieldName];
         }
     }
 
