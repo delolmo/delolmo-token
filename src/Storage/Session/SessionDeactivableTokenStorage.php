@@ -52,14 +52,6 @@ class SessionDeactivableTokenStorage implements DeactivableTokenStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function deactivateTokens(string $tokenId)
-    {
-        return $this->deactivateToken($tokenId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getToken(string $tokenId): string
     {
         if (!$this->sessionStarted) {

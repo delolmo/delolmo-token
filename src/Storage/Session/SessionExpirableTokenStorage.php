@@ -52,14 +52,6 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function expireTokens(string $tokenId)
-    {
-        return $this->expireToken($tokenId);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getToken(string $tokenId): string
     {
         if (!$this->sessionStarted) {
