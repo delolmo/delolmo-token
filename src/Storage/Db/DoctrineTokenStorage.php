@@ -252,7 +252,7 @@ class DoctrineTokenStorage implements TokenStorageInterface
 
         if (self::$parameters === null) {
             $interface = array_keys(class_implements(__CLASS__));
-            $reflection = new \ReflectionClass($interfaces[0]);
+            $reflection = new \ReflectionClass($interface[0]);
             $setTokenMethod = $reflection->getMethod('setToken');
             self::$parameters = $setTokenMethod->getParameters();
         }
