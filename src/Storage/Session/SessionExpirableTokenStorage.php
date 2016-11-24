@@ -124,8 +124,8 @@ class SessionExpirableTokenStorage implements ExpirableTokenStorageInterface
      */
     private function startSession()
     {
-        if (\PHP_SESSION_NONE === session_status()) {
-            session_start();
+        if (\PHP_SESSION_NONE === \session_status()) {
+            \session_start();
         }
 
         $this->sessionStarted = true;
