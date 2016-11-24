@@ -82,11 +82,11 @@ class ExpirableTokenManager extends AbstractTokenManager implements ExpirableTok
         $value = $this->generator->generateToken($tokenId);
         $timeout = $expiresAt ?? $this->timeout;
 
-        // Hash the value using the provided encoder
-        $hash = $this->encoder->hash($value);
+        // Encode the value using the provided encoder
+        $encoded = $this->encoder->encode($value);
 
         // Store the hashed value
-        $this->storage->setToken($tokenId, $hash, $timeout);
+        $this->storage->setToken($tokenId, $encoded, $timeout);
 
         // Return the value before hashing
         return $value;

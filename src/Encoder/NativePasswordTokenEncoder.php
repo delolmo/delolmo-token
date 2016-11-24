@@ -13,7 +13,15 @@ class NativePasswordTokenEncoder implements TokenEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function hash(string $value): string
+    public function decode(string $value): string
+    {
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function encode(string $value): string
     {
         return password_hash($value, PASSWORD_DEFAULT);
     }
@@ -21,8 +29,9 @@ class NativePasswordTokenEncoder implements TokenEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function verify(string $value, string $hash): bool
+    public function verify(string $input, string $value): bool
     {
-        return password_verify($value, $hash);
+        return password_verify($input, $value);
     }
+
 }

@@ -22,7 +22,9 @@ abstract class AbstractTokenManager
             throw new TokenNotFoundException($message);
         }
 
-        return $this->storage->getToken($tokenId);
+        $encoded = $this->storage->getToken($tokenId);
+        
+        return $this->encoder->decode($encoded);
     }
 
     /**
@@ -43,11 +45,11 @@ abstract class AbstractTokenManager
             return false;
         }
 
-        // Read the hashed value of the stored token
-        $hash = $this->storage->getToken($tokenId);
+        // Get the decoded value of the stored token
+        $decoded = $this->storage->getToken($tokenId);
 
         // Whether or not the hashed/encoded value and the given value match
-        return $this->encoder->verify($value, $hash);
+        return $this->encoder->verify($value, $decoded);
     }
 
     /**

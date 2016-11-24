@@ -13,7 +13,7 @@ class DummyTokenEncoder implements TokenEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function hash(string $value): string
+    public function decode(string $value): string
     {
         return $value;
     }
@@ -21,9 +21,17 @@ class DummyTokenEncoder implements TokenEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function verify(string $value, string $hash): bool
+    public function encode(string $value): string
     {
-        return $value === $hash;
+        return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function verify(string $input, string $value): bool
+    {
+        return $input === $value;
     }
 
 }

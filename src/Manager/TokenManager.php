@@ -70,10 +70,10 @@ class TokenManager extends AbstractTokenManager implements TokenManagerInterface
         $value = $this->generator->generateToken($tokenId);
 
         // Hash the value using the provided encoder
-        $hash = $this->encoder->hash($value);
+        $encoded = $this->encoder->encode($value);
 
         // Store the hashed value
-        $this->storage->setToken($tokenId, $hash);
+        $this->storage->setToken($tokenId, $encoded);
 
         // Return the value before hashing
         return $value;

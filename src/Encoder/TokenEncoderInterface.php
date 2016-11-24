@@ -12,10 +12,15 @@ interface TokenEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function hash(string $value): string;
+    public function decode(string $value): string;
 
     /**
      * {@inheritdoc}
      */
-    public function verify(string $value, string $hash): bool;
+    public function encode(string $value): string;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function verify(string $input, string $value): bool;
 }
