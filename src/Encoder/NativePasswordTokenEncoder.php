@@ -23,7 +23,7 @@ class NativePasswordTokenEncoder implements TokenEncoderInterface
      */
     public function encode(string $value): string
     {
-        return password_hash($value, PASSWORD_DEFAULT);
+        return \password_hash($value, \PASSWORD_DEFAULT);
     }
 
     /**
@@ -31,7 +31,7 @@ class NativePasswordTokenEncoder implements TokenEncoderInterface
      */
     public function verify(string $input, string $value): bool
     {
-        return password_verify($input, $value);
+        return \password_verify($input, $value);
     }
 
 }
